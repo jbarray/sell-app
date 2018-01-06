@@ -6,14 +6,15 @@
  import Vue from 'vue'
  import App from '../src/App.vue'
  import VueRouter from 'vue-router'
- // import VueResource from 'vue-resource'
+ import VueResource from 'vue-resource'
  import goods from './components/goods/goods.vue'
  import './common/stylus/index.styl'
  const routes=[
   {path: '/goods', component: goods}
 ]
-Vue.use(VueRouter)
-// Vue.use(VueResource)
+import './common/stylus/index.styl';
+Vue.use(VueRouter);
+Vue.use(VueResource);
 const router = new VueRouter({
   routes
 })

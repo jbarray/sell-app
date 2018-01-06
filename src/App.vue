@@ -1,6 +1,7 @@
 <!--//<link rel="stylesheet" href="common/stylus/mixin.styl">-->
 <template xmlns="http://www.w3.org/1999/html">
   <div id="content">
+    <v-header :seller="seller"></v-header>
     <div class="tab border-1px">
     <div class="tab-item">
     <router-link to="/goods">商品</router-link>
@@ -16,7 +17,26 @@
   </div>
 </template>
 <script>
-//  import header from './components/header/header'
+  import header from './components/header/header.vue'
+  // 判断resource的资源返回是否是我们想要的内容
+  const ERR_OK = 0
+  export default {
+    data(){
+      return{
+        seller:{}
+      }
+    },
+    components:{
+      'v-header':header
+    },
+    created(){
+      this.$http.get('/api/seller').then((response) => {
+        if(response.body.errno===ERR_OK){
+          this.seller=response.body.data;
+        }
+      });
+    }
+  }
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
   //引入1像素文件

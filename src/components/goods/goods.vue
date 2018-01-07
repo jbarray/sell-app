@@ -1,9 +1,9 @@
 <template>
   <div class="goods">
     <!--左侧列表-->
-   <div class="menu-wrapper">
+   <div class="menu-wrapper" ref="menuWrapper">
      <ul>
-       <li v-for="item in goods" class="menu-item">
+       <li v-for="(item,index,event) in goods" class="menu-item" :class="{'current':currentIndex===index}" @click="selectMenu(index,event)">
          <span class="text">
            <span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>
            {{item.name}}
@@ -12,9 +12,10 @@
      </ul>
    </div>
     <!--右侧商品栏-->
-    <div class="foods-wrapper">
+    <div class="foods-wrapper" ref="foodsWrapper">
       <ul>
-        <li v-for="item in goods" class="food-list">
+        <!--food-list-hook为常用规定,意味着用在js中-->
+        <li v-for="item in goods" class="food-list food-list-hook">
           <h1 class="title">{{item.name}}</h1>
           <ul>
             <li v-for="food in item.foods" class="food-item">
@@ -41,12 +42,15 @@
   </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
+  import BScroll from 'better-scroll';
   const ERR_OK = 0;
 export default {
   data () {
     return {
-      goods: []
+      goods: [],
+      listHeight: [],
+      scrollY:0
     };
   },
   props: {
@@ -58,9 +62,62 @@ export default {
     this.$http.get('/api/goods').then((response) => {
       if(response.body.errno === ERR_OK){
         this.goods=response.body.data
+        this.$nextTick(() => {
+          this._initScroll();
+          this._calculateHeight();
+        })
       }
     });
     this.classMap = ['decrease','discount','guarantee','invoice','special']
+  },
+  methods: {
+    //点击左侧菜单,右侧跳至相应的模块
+    selectMenu: function (index, event) {
+      //获取右侧模块的高度数组
+      let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
+      let el = foodList[index];
+      //使右侧菜单跳转到相应的地方,在300毫秒内
+      this.foodsScroll.scrollToElement(el, 300);
+    },
+    _initScroll() {
+      this.meunScroll = new BScroll(this.$refs.menuWrapper, {
+        //给左侧菜单创建一个click事件.
+        click: true
+      });
+      this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
+        //        目的是实时监控右侧滚动的位置
+        probeType: 3
+
+      });
+      //监听当前的位置在y轴上的位置
+      this.foodsScroll.on('scroll',(pos) => {
+        this.scrollY = Math.abs(Math.round(pos.y));
+      })
+    },
+    //收集每个模块从最上端数的高度值
+    _calculateHeight() {
+      let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
+      let height = 0;
+      this.listHeight.push(height);
+      for (let i = 0; i < foodList.length; i++) {
+        let item = foodList[i];
+        height += item.clientHeight;
+        this.listHeight.push(height);
+      }
+    }
+  },
+  computed: {
+    //比较现在所在位置和每个模块的高度值的大小
+    currentIndex() {
+      for (let i = 0; i< this.listHeight.length; i++) {
+        let height1 = this.listHeight[i];
+        let height2 = this.listHeight[i + 1];
+        if (!height2 || this.scrollY >= height1 && this.scrollY < height2) {
+          return i;
+        }
+      }
+      return 0;
+    }
   }
 }
 </script>
@@ -85,6 +142,14 @@ export default {
         width: 56px
         line-height 14px
         padding:0 12px
+        &.current
+          position relative
+          z-index 10
+          margin-top -1px
+          background #ffffff
+          font-weight:700
+          .text
+            border-none()
         .icon
           display inline-block
           width: 12px

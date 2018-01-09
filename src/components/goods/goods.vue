@@ -3,7 +3,7 @@
     <!--左侧列表-->
    <div class="menu-wrapper" ref="menuWrapper">
      <ul>
-       <li v-for="(item,index,event) in goods" class="menu-item" :class="{'current':currentIndex===index}" @click="selectMenu(index,event)">
+       <li v-for="(item,index) in goods" class="menu-item" :class="{'current':currentIndex===index}" @click="selectMenu(index,event)">
          <span class="text">
            <span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>
            {{item.name}}
@@ -18,7 +18,7 @@
         <li v-for="item in goods" class="food-list food-list-hook">
           <h1 class="title">{{item.name}}</h1>
           <ul>
-            <li v-for="food in item.foods" class="food-item">
+            <li @click="selectFood(food,event)" v-for="food in item.foods" class="food-item">
               <div class="icon">
                 <img :src="food.icon" width="57" height="57">
               </div>
@@ -33,17 +33,24 @@
                   <span class="now">¥{{food.price}}</span>
                   <span class="old" v-show="food.oldPrice">¥{{food.oldPrice}}</span>
                 </div>
+                <div class="cartContorl-wrapper">
+                  <cartControl :food="food"></cartControl>
+                </div>
               </div>
             </li>
           </ul>
         </li>
       </ul>
     </div>
+    <!--购物车-->
+    <shopcart ref="shopcart" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll';
+  import shopcart from '../shopcart/shopcart'
+  import cartControl from '../cartControl/cartControl'
   const ERR_OK = 0;
 export default {
   data () {
@@ -70,6 +77,10 @@ export default {
     });
     this.classMap = ['decrease','discount','guarantee','invoice','special']
   },
+  components:{
+    shopcart,
+    cartControl
+  },
   methods: {
     //点击左侧菜单,右侧跳至相应的模块
     selectMenu: function (index, event) {
@@ -79,6 +90,8 @@ export default {
       //使右侧菜单跳转到相应的地方,在300毫秒内
       this.foodsScroll.scrollToElement(el, 300);
     },
+    //点击具体食物,food页面出现
+
     _initScroll() {
       this.meunScroll = new BScroll(this.$refs.menuWrapper, {
         //给左侧菜单创建一个click事件.
@@ -86,8 +99,8 @@ export default {
       });
       this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
         //        目的是实时监控右侧滚动的位置
+        click: true,
         probeType: 3
-
       });
       //监听当前的位置在y轴上的位置
       this.foodsScroll.on('scroll',(pos) => {
@@ -104,6 +117,15 @@ export default {
         height += item.clientHeight;
         this.listHeight.push(height);
       }
+    },
+    //访问子组件shopcart
+    _drop(target) {
+      this.$refs.shopcart.drop(target);
+    },
+  },
+  events: {
+    'cart.add'(target){
+      this._drop(target);
     }
   },
   computed: {
@@ -195,6 +217,7 @@ export default {
           flex 0 0 57px
           margin-right 10px
         .content
+          position relative
           flex: 1
           .name
             margin:2px 0 8px 0

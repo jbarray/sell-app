@@ -43,21 +43,22 @@
       </ul>
     </div>
     <!--购物车-->
-    <shopcart ref="shopcart" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+    <shopcart ref="shopcart" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" :select-foods="selectFoods"></shopcart>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll';
   import shopcart from '../shopcart/shopcart'
-  import cartControl from '../cartControl/cartControl'
+  import cartControl from '../cart_control/cart_control'
   const ERR_OK = 0;
 export default {
-  data () {
+  data() {
     return {
       goods: [],
       listHeight: [],
-      scrollY:0
+      scrollY: 0,
+      selectedFood: {}
     };
   },
   props: {
@@ -65,19 +66,22 @@ export default {
       type: Object
     }
   },
-  created(){
+  created() {
     this.$http.get('/api/goods').then((response) => {
-      if(response.body.errno === ERR_OK){
-        this.goods=response.body.data
+      if (response.body.errno === ERR_OK) {
+        this.goods = response.body.data
         this.$nextTick(() => {
           this._initScroll();
           this._calculateHeight();
         })
       }
     });
-    this.classMap = ['decrease','discount','guarantee','invoice','special']
+    this.classMap = ['decrease', 'discount', 'guarantee', 'invoice', 'special'];
+//    shopcart.$on('cart.add',(el) =>{
+//      console.log(el);
+//    })
   },
-  components:{
+  components: {
     shopcart,
     cartControl
   },
@@ -103,7 +107,7 @@ export default {
         probeType: 3
       });
       //监听当前的位置在y轴上的位置
-      this.foodsScroll.on('scroll',(pos) => {
+      this.foodsScroll.on('scroll', (pos) => {
         this.scrollY = Math.abs(Math.round(pos.y));
       })
     },
@@ -120,27 +124,36 @@ export default {
     },
     //访问子组件shopcart
     _drop(target) {
-      this.$refs.shopcart.drop(target);
+      // 体验优化,异步执行下落动画
+      this.$nextTick(() => {
+        this.$refs.shopcart.drop(target);
+      });
     },
   },
-  events: {
-    'cart.add'(target){
-      this._drop(target);
-    }
-  },
-  computed: {
-    //比较现在所在位置和每个模块的高度值的大小
-    currentIndex() {
-      for (let i = 0; i< this.listHeight.length; i++) {
-        let height1 = this.listHeight[i];
-        let height2 = this.listHeight[i + 1];
-        if (!height2 || this.scrollY >= height1 && this.scrollY < height2) {
-          return i;
+    computed: {
+      //比较现在所在位置和每个模块的高度值的大小
+      currentIndex() {
+        for (let i = 0; i < this.listHeight.length; i++) {
+          let height1 = this.listHeight[i];
+          let height2 = this.listHeight[i + 1];
+          if (!height2 || this.scrollY >= height1 && this.scrollY < height2) {
+            return i;
+          }
         }
+        return 0;
+      },
+      selectFoods() {
+        let foods = [];
+        this.goods.forEach((good) => {
+          good.foods.forEach((food) => {
+            if (food.count) {
+              foods.push(food);
+            }
+          });
+        });
+        return foods;
       }
-      return 0;
-    }
-  }
+    },
 }
 </script>
 
@@ -245,4 +258,5 @@ export default {
                 text-decoration line-through
                 font-size 10px
                 color: rgb(147, 153, 159)
+
 </style>

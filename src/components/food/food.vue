@@ -29,13 +29,12 @@
       </div>
       <!--复用小方条-->
       <split></split>
-      <!--商品评价-->
       <div class="rating">
         <h1 class="title">商品评价</h1>
-        <ratingselect  :desc="desc"
-                      :ratings="food.ratings" v-on:ratingtype-select="selectChange" v-on:content-toggle="contentChange"></ratingselect>
+        <ratingselect :desc="desc"
+        :ratings="food.ratings" v-on:ratingtype-select="selectChange" v-on:content-toggle="contentChange"></ratingselect>
         <div class="rating-wrapper">
-          <ul v-show="food.ratings && food.ratings.length">
+          <ul>
             <li v-show="needShow(rating.rateType,rating.text)" v-for="rating in food.ratings"
                 class="rating-item border-1px">
               <div class="user">
@@ -75,7 +74,7 @@
       return {
         showFlag: false,
         selectType: ALL,
-        onlyContent: true,
+        onlyContent: false,
         desc: {
           all: '全部',
           positive: '推荐',
@@ -114,13 +113,13 @@
 //      默认展示全部评价
       needShow(type, text) {
         if (this.onlyContent && !text) {
-          return false;
-        }
-        if (this.selectType === ALL) {
-          return true;
-        } else {
+          return false
+        }else {
+          if (this.selectType === ALL) {
+            return true;
+          }
           return type === this.selectType;
-        }
+         }
       },
 //      子元素ratingselect更改selectType和onlyContent的值,进行赋值
       selectChange: function(e) {

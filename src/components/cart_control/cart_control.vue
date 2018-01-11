@@ -8,8 +8,7 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
-  import Vue from 'vue';
-  import shopcart from '../shopcart/shopcart.vue'
+  import Vue from 'vue'
   export default {
     props: {
       food: {
@@ -25,9 +24,6 @@
         if (this.food.count > 0) {
           this.food.count--;
         }
-//        触发小球事件的启动
-        shopcart.$emit('cart.add', event.target);
-//        this.$dispatch('cart.add', event.target);
       },
 //      增加商品数量的按钮
       addCart:function(event) {
@@ -41,6 +37,9 @@
         else {
           this.food.count++
         }
+        //        触发小球事件的启动
+        this.$emit('cart-add', event.target);
+        //      this.$dispatch('cart.add', event.target);
       }
     }
   }
@@ -48,11 +47,11 @@
 <style lang="stylus" rel="stylesheet/stylus">
   .cartControl
     position absolute
-    right: 10px
+    right: 20px
     top: 20px
     font-size: 0
-    width: 62px
-    height: 24px
+    /*width: 62px*/
+    /*height: 24px*/
     .cart-decrease
       display: inline-block
       transition: all 0.4s linear

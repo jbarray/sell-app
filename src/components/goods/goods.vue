@@ -18,7 +18,7 @@
         <li v-for="item in goods" class="food-list food-list-hook">
           <h1 class="title">{{item.name}}</h1>
           <ul>
-            <li @click="selectFood(food,event)" v-for="food in item.foods" class="food-item">
+            <li @click="selectFood(food,$event)" v-for="food in item.foods" class="food-item">
               <div class="icon">
                 <img :src="food.icon" width="57" height="57">
               </div>
@@ -34,7 +34,7 @@
                   <span class="old" v-show="food.oldPrice">¥{{food.oldPrice}}</span>
                 </div>
                 <div class="cartContorl-wrapper">
-                  <cartControl :food="food"></cartControl>
+                  <cartControl :food="food" v-on:cart-add="cartAdd"></cartControl>
                 </div>
               </div>
             </li>
@@ -44,13 +44,15 @@
     </div>
     <!--购物车-->
     <shopcart ref="shopcart" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" :select-foods="selectFoods"></shopcart>
+    <food :food="selectedFood" ref="food"></food>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import BScroll from 'better-scroll';
+  import BScroll from 'better-scroll'
   import shopcart from '../shopcart/shopcart'
   import cartControl from '../cart_control/cart_control'
+  import food from '../food/food'
   const ERR_OK = 0;
 export default {
   data() {
@@ -83,11 +85,18 @@ export default {
   },
   components: {
     shopcart,
-    cartControl
+    cartControl,
+    food
   },
+//  events: {
+//    'cart.add'(target) {
+////      this._drop(target);
+//      console.log('123');
+//    }
+//  },
   methods: {
     //点击左侧菜单,右侧跳至相应的模块
-    selectMenu: function (index, event) {
+    selectMenu: function (index, $event) {
       //获取右侧模块的高度数组
       let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
       let el = foodList[index];
@@ -95,7 +104,23 @@ export default {
       this.foodsScroll.scrollToElement(el, 300);
     },
     //点击具体食物,food页面出现
-
+    selectFood(food, event) {
+      if (!event._constructed) {
+        return;
+      }
+      this.selectedFood = food;
+      this.$nextTick(() => {
+        this.$refs.food.show();
+      })
+    },
+//     监听cartControl中的_drop事件
+    cartAdd(el) {
+      // 体验优化,异步执行下落动画
+      this.$nextTick(() => {
+       this.$refs.shopcart.drop(el);
+//        console.log(el);
+      });
+    },
     _initScroll() {
       this.meunScroll = new BScroll(this.$refs.menuWrapper, {
         //给左侧菜单创建一个click事件.
@@ -122,14 +147,8 @@ export default {
         this.listHeight.push(height);
       }
     },
-    //访问子组件shopcart
-    _drop(target) {
-      // 体验优化,异步执行下落动画
-      this.$nextTick(() => {
-        this.$refs.shopcart.drop(target);
-      });
-    },
   },
+    //访问子组件shopcart
     computed: {
       //比较现在所在位置和每个模块的高度值的大小
       currentIndex() {

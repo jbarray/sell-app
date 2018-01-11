@@ -23,7 +23,7 @@
   export default {
     data() {
       return {
-        type : 0,
+        type : 2,
         justContent: true
       }
     },

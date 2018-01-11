@@ -25,8 +25,8 @@
         </div>
       </div>
       <split></split>
-      <ratingselect :select-type="selectType" :only-content="onlyContent" :desc="desc"
-                    :ratings="ratings"></ratingselect>
+      <ratingselect  :desc="desc"
+                    :ratings="ratings" v-on:ratingtype-select="selectChange" v-on:content-toggle="contentChange"></ratingselect>
       <div class="rating-wrapper">
         <ul>
           <li v-for="rating in ratings" v-show="needShow(rating.rateType, rating.text)" class="rating-item">
@@ -99,24 +99,23 @@
     methods: {
       needShow(type, text) {
         if (this.onlyContent && !text) {
-          return false;
-        }
-        if (this.selectType === ALL) {
-          return true;
-        } else {
+          return false
+        }else {
+          if (this.selectType === ALL) {
+            return true;
+          }
           return type === this.selectType;
         }
-      }
-    },
-    events: {
-      'ratingtype.select'(type) {
-        this.selectType = type;
+      },
+      selectChange: function(e) {
+        this.selectType = e;
+//       防止点击按钮后,页面向上跳
         this.$nextTick(() => {
           this.scroll.refresh();
         });
       },
-      'content.toggle'(onlyContent) {
-        this.onlyContent = onlyContent;
+      contentChange: function(change) {
+        this.onlyContent = change;
         this.$nextTick(() => {
           this.scroll.refresh();
         });

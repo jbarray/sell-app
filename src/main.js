@@ -8,9 +8,13 @@
  import VueRouter from 'vue-router'
  import VueResource from 'vue-resource'
  import goods from './components/goods/goods.vue'
+ import ratings from './components/ratings/ratings.vue'
+ import seller from './components/seller/seller.vue'
  import './common/stylus/index.styl'
  const routes=[
-  {path: '/goods', component: goods}
+   {path: '/goods', component: goods},
+   {path: '/ratings', component: ratings},
+   {path: '/seller', component: seller}
 ]
 import './common/stylus/index.styl';
 Vue.use(VueRouter);

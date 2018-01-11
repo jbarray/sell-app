@@ -3,11 +3,13 @@
     <div class="seller-content">
       <div class="overview">
         <h1 class="title">{{seller.name}}</h1>
+        <!--星级,销量-->
         <div class="desc border-1px">
           <star :size="36" :score="seller.score"></star>
           <span class="text">({{seller.ratingCount}})</span>
           <span class="text">月售{{seller.sellCount}}单</span>
         </div>
+        <!--销售信息-->
         <ul class="remark">
           <li class="block">
             <h2>起送价</h2>
@@ -28,29 +30,33 @@
             </div>
           </li>
         </ul>
+        <!--收藏-->
         <div class="favorite" @click="toggleFavorite">
           <span class="icon-favorite" :class="{'active':favorite}"></span>
           <span class="text">{{favoriteText}}</span>
         </div>
       </div>
       <split></split>
+      <!--公告与活动-->
       <div class="bulletin">
         <h1 class="title">公告与活动</h1>
         <div class="content-wrapper border-1px">
           <p class="content">{{seller.bulletin}}</p>
         </div>
         <ul v-if="seller.supports" class="supports">
-          <li class="support-item border-1px" v-for="item in seller.supports">
-            <span class="icon" :class="classMap[seller.supports[$index].type]"></span>
-            <span class="text">{{seller.supports[$index].description}}</span>
+          <li class="support-item border-1px" v-for="(item,index) in seller.supports">
+            <span class="icon" :class="classMap[seller.supports[index].type]"></span>
+            <span class="text">{{seller.supports[index].description}}</span>
           </li>
         </ul>
       </div>
       <split></split>
+      <!--商家照片-->
       <div class="pics">
         <h1 class="title">商家实景</h1>
-        <div class="pic-wrapper" ref="pic-wrapper">
-          <ul class="pic-list" ref="pic-list">
+        <div class="pic-wrapper" ref="picWrapper">
+          <!--<ul class="pic-list" ref="pic-list">-->
+          <ul class="pic-list" ref="picList">
             <li class="pic-item" v-for="pic in seller.pics">
               <img :src="pic" width="120" height="90">
             </li>
@@ -58,6 +64,7 @@
         </div>
       </div>
       <split></split>
+      <!--商家信息-->
       <div class="info">
         <h1 class="title border-1px">商家信息</h1>
         <ul>
@@ -70,7 +77,7 @@
 
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll';
-//  import {saveToLocal, loadFromLocal} from 'common/js/store';
+  import {saveToLocal, loadFromLocal} from '../../common/js/store';
   import star from '../star/star';
   import split from '../split/split';
 
@@ -82,6 +89,7 @@
     },
     data() {
       return {
+//        记录此商家是否收藏
         favorite: (() => {
           return loadFromLocal(this.seller.id, 'favorite', false);
         })()
@@ -115,7 +123,7 @@
       },
       _initScroll() {
         if (!this.scroll) {
-          this.scroll = new BScroll(this.$els.seller, {
+          this.scroll = new BScroll(this.$refs.seller, {
             click: true
           });
         } else {
@@ -127,10 +135,10 @@
           let picWidth = 120;
           let margin = 6;
           let width = (picWidth + margin) * this.seller.pics.length - margin;
-          this.$els.picList.style.width = width + 'px';
+          this.$refs.picList.style.width = width + 'px';
           this.$nextTick(() => {
             if (!this.picScroll) {
-              this.picScroll = new BScroll(this.$els.picWrapper, {
+              this.picScroll = new BScroll(this.$refs.picWrapper, {
                 scrollX: true,
                 eventPassthrough: 'vertical'
               });

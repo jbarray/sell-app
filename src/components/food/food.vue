@@ -17,7 +17,7 @@
           <span class="now">￥{{food.price}}</span><span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
         </div>
         <div class="cartcontrol-wrapper">
-          <cartControl :food="food"></cartControl>
+          <cartControl :food="food" v-on:cart-add="cartPlus"></cartControl>
         </div>
         <div @click.stop.prevent="addFirst" class="buy" v-show="!food.count || food.count===0" transition="fade">加入购物车
         </div>
@@ -134,26 +134,14 @@
         this.$nextTick(() => {
           this.scroll.refresh();
         });
+      },
+      cartPlus(el) {
+        this.$nextTick(() => {
+          this.$emit('cart-plus',el);
+        });
       }
     },
-//    created() {
-//      this.$on('ratingtype.select',(type) => ({
-//        this.selectType = type;
-//    })
-//    )
-//    }
-//      'ratingtype.select'(type) {
-//        this.selectType = type;
-//        this.$nextTick(() => {
-//          this.scroll.refresh();
-//        });
-//      },
-//      'content.toggle'(onlyContent) {
-//        this.onlyContent = onlyContent;
-//        this.$nextTick(() => {
-//          this.scroll.refresh();
-//        });
-//      }
+
 //    时间的过滤
     filters: {
       formatDate(time) {

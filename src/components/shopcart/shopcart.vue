@@ -45,7 +45,7 @@
                <span>￥{{food.price*food.count}}</span>
              </div>
              <div class="cartcontrol-wrapper">
-               <cartControl :food="food"></cartControl>
+               <cartControl :food="food" v-on:cart-add="cartAdd"></cartControl>
              </div>
            </li>
          </ul>
@@ -170,6 +170,14 @@
       empty() {
         this.selectFoods.forEach((food) => {
           food.count = 0;
+        });
+      },
+      //     监听cartControl中的_drop事件
+      cartAdd(el) {
+        // 体验优化,异步执行下落动画
+        this.$nextTick(() => {
+          this.drop(el);
+//        console.log(el);
         });
       },
     },
@@ -437,6 +445,10 @@
             position: absolute
             top: -7px
             right: 10px
+            width: 80px
+            height: 24px
+            .cartControl
+              width: 62px
   .list-mask
     position: fixed
     top: 0

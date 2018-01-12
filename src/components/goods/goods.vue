@@ -44,7 +44,8 @@
     </div>
     <!--购物车-->
     <shopcart ref="shopcart" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" :select-foods="selectFoods"></shopcart>
-    <food :food="selectedFood" ref="food"></food>
+    <!--产品详情页-->
+    <food :food="selectedFood" ref="food" v-on:cart-plus="cartAdd" ></food>
   </div>
 </template>
 
@@ -118,7 +119,6 @@ export default {
       // 体验优化,异步执行下落动画
       this.$nextTick(() => {
        this.$refs.shopcart.drop(el);
-//        console.log(el);
       });
     },
     _initScroll() {

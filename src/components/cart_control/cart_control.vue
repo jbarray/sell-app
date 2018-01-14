@@ -47,7 +47,7 @@
 <style lang="stylus" rel="stylesheet/stylus">
   .cartControl
     position absolute
-    right: 20px
+    right: 10px
     top: 20px
     font-size: 0
     /*width: 62px*/

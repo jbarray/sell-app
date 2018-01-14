@@ -54,7 +54,7 @@
   import shopcart from '../shopcart/shopcart'
   import cartControl from '../cart_control/cart_control'
   import food from '../food/food'
-  const ERR_OK = 0;
+//  const ERR_OK = 0;
 export default {
   data() {
     return {
@@ -70,15 +70,24 @@ export default {
     }
   },
   created() {
-    this.$http.get('/api/goods').then((response) => {
-      if (response.body.errno === ERR_OK) {
-        this.goods = response.body.data
+    this.$http.get('../../../static/goods.json').then((response) => {
+      if (response.statusText === "OK") {
+        this.goods = response.body.goods
         this.$nextTick(() => {
           this._initScroll();
           this._calculateHeight();
         })
       }
     });
+//    this.$http.get('/api/goods').then((response) => {
+//      if (response.body.errno === ERR_OK) {
+//        this.goods = response.body.data
+//        this.$nextTick(() => {
+//          this._initScroll();
+//          this._calculateHeight();
+//        })
+//      }
+//    });
     this.classMap = ['decrease', 'discount', 'guarantee', 'invoice', 'special'];
 //    shopcart.$on('cart.add',(el) =>{
 //      console.log(el);
@@ -263,6 +272,7 @@ export default {
             color: rgb(147, 153, 159)
           .desc
             margin-bottom: 8px
+            width: 150px
           .extra
             &.count
               margin-right 12px

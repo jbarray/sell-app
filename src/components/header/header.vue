@@ -29,6 +29,7 @@
     <div class="background">
       <img :src="seller.avatar" width="100%" height="100%">
     </div>
+    <!--<div class="list-mask"  v-show="isDetailShow" transition="fade"></div>-->
     <div class="detail" v-show="isDetailShow" transition="fade">
       <div class="detail-wrapper clearfix">
         <div class="detail-main">
@@ -57,7 +58,7 @@
           </div>
         </div>
       </div>
-      <div class="derail-close" @click="hideDetail">
+      <div class="detail-close" @click="hideDetail">
         <i class="icon-close"></i>
       </div>
     </div>
@@ -211,7 +212,7 @@ export default {
       /*sticky footers 的布局*/
     .detail
       position fixed
-      z-index 100px
+      z-index 30
       top: 0
       left: 0
       width: 100%
@@ -220,6 +221,7 @@ export default {
       background:rgba(7,17,27,0.8)
       transition all 0.5s
       -webkit-backdrop-filter blur(10px)
+      backdrop-filter blur(10px)
       &.fade-transition
         opacity 1
         background rgba(7,17,27,0.8)
@@ -297,7 +299,7 @@ export default {
         position relative
         width: 32px
         height:32px
-        margin: -64px auto 0 auto
+        margin: -78px auto 0 auto
         clear: both
         font-size:32px
 </style>

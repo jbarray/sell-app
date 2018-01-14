@@ -12,7 +12,7 @@
         <!--销售信息-->
         <ul class="remark">
           <li class="block">
-            <h2>起送价</h2>
+            <h2 >起送价</h2>
             <div class="content">
               <span class="stress">{{seller.minPrice}}</span>元
             </div>
@@ -31,7 +31,7 @@
           </li>
         </ul>
         <!--收藏-->
-        <div class="favorite" @click="toggleFavorite">
+        <div class="sever favorite" @click="toggleFavorite">
           <span class="icon-favorite" :class="{'active':favorite}"></span>
           <span class="text">{{favoriteText}}</span>
         </div>
@@ -115,9 +115,10 @@
     },
     methods: {
       toggleFavorite(event) {
-        if (!event._constructed) {
-          return;
-        }
+//        问题点
+//        if (!event._constructed) {
+//          return;
+//        }
         this.favorite = !this.favorite;
         saveToLocal(this.seller.id, 'favorite', this.favorite);
       },
@@ -209,7 +210,7 @@
             color: rgb(7, 17, 27)
             .stress
               font-size: 24px
-      .favorite
+      .sever
         position: absolute
         width: 50px
         right: 11px

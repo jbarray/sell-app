@@ -63,7 +63,7 @@
   import split from '../split/split';
 
   const ALL = 2;
-  const ERR_OK = 0;
+//  const ERR_OK = 0;
 
   export default {
     props: {
@@ -84,10 +84,9 @@
       };
     },
     created() {
-      this.$http.get('/api/ratings').then((response) => {
-        response = response.body;
-        if (response.errno === ERR_OK) {
-          this.ratings = response.data;
+      this.$http.get('../../../static/ratings.json').then((response) => {
+        if (response.statusText === "OK") {
+          this.ratings = response.body.ratings;
           this.$nextTick(() => {
             this.scroll = new BScroll(this.$refs.ratings, {
               click: true
@@ -96,6 +95,19 @@
         }
       });
     },
+//    created() {
+//      this.$http.get('api/ratings').then((response) => {
+//        response = response.body;
+//        if (response.errno === ERR_OK) {
+//          this.ratings = response.data;
+//          this.$nextTick(() => {
+//            this.scroll = new BScroll(this.$refs.ratings, {
+//              click: true
+//            });
+//          });
+//        }
+//      });
+//    },
     methods: {
       needShow(type, text) {
         if (this.onlyContent && !text) {

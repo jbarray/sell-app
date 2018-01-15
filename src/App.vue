@@ -19,7 +19,7 @@
 <script>
   import header from './components/header/header.vue'
   // 判断resource的资源返回是否是我们想要的内容
-  const ERR_OK = 0
+//  const ERR_OK = 0
   export default {
     data(){
       return{
@@ -30,12 +30,19 @@
       'v-header':header
     },
     created(){
-      this.$http.get('/api/seller').then((response) => {
-        if(response.body.errno===ERR_OK){
-          this.seller=response.body.data;
+      this.$http.get('../static/seller.json').then((response) => {
+        if (response.statusText === "OK"){
+          this.seller=response.body.seller;
         }
       });
-    }
+    },
+//    created(){
+//      this.$http.get('/api/seller').then((response) => {
+//        if(response.body.errno===ERR_OK){
+//          this.seller=response.body.data;
+//        }
+//      });
+//    }
   }
 </script>
 <style lang="stylus" rel="stylesheet/stylus">

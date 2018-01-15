@@ -20,6 +20,7 @@ import './common/stylus/index.styl';
 Vue.use(VueRouter);
 Vue.use(VueResource);
 const router = new VueRouter({
+  // base:'/dist/',
   routes
 })
 /* eslint-disable no-new */

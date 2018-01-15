@@ -3,8 +3,8 @@
   <div id="content">
     <v-header :seller="seller"></v-header>
     <div class="tab border-1px">
-    <div class="tab-item">
-    <router-link to="/goods">商品</router-link>
+    <div class="tab-item"  >
+    <router-link to="/">商品</router-link>
     </div>
     <div class="tab-item">
     <router-link to="/ratings">评论</router-link>
@@ -23,7 +23,7 @@
   export default {
     data(){
       return{
-        seller:{}
+        seller:{},
       }
     },
     components:{
@@ -61,6 +61,6 @@
        display:block
        font-size: 14px
        color:rgb(77,85,93)
-       &:active
+       &:hover
          color:rgb(240,20,20)
 </style>

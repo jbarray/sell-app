@@ -109,7 +109,7 @@
         this._initPics();
       }
     },
-    ready() {
+    mounted() {
       this._initScroll();
       this._initPics();
     },
@@ -127,10 +127,11 @@
           this.scroll = new BScroll(this.$refs.seller, {
             click: true
           });
-        } else {
-          this.scroll.refresh();
         }
-      },
+         else {
+                  this.scroll.refresh();
+                }
+              },
       _initPics() {
         if (this.seller.pics) {
           let picWidth = 120;

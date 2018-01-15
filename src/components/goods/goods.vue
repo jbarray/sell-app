@@ -3,7 +3,7 @@
     <!--左侧列表-->
    <div class="menu-wrapper" ref="menuWrapper">
      <ul>
-       <li v-for="(item,index) in goods" class="menu-item" :class="{'current':currentIndex===index}" @click="selectMenu(index,event)">
+       <li v-for="(item,index) in goods" class="menu-item" :class="{'current':currentIndex===index}" @click="selectMenu(index,$event)">
          <span class="text">
            <span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>
            {{item.name}}
@@ -56,108 +56,102 @@
   import food from '../food/food'
 //  const ERR_OK = 0;
 export default {
-  data() {
-    return {
-      goods: [],
-      listHeight: [],
-      scrollY: 0,
-      selectedFood: {}
-    };
-  },
-  props: {
-    seller: {
-      type: Object
-    }
-  },
-  created() {
-    this.$http.get('../../../static/goods.json').then((response) => {
-      if (response.statusText === "OK") {
-        this.goods = response.body.goods
+    data() {
+      return {
+        goods: [],
+        listHeight: [],
+        scrollY: 0,
+        selectedFood: {}
+      };
+    },
+    props: {
+      seller: {
+        type: Object
+      }
+    },
+    created() {
+      this.$http.get('../../../static/goods.json').then((response) => {
+        if (response.statusText === "OK") {
+          this.goods = response.body.goods
+          this.$nextTick(() => {
+            this._initScroll();
+            this._calculateHeight();
+          })
+        }
+      });
+  //    this.$http.get('/api/goods').then((response) => {
+  //      if (response.body.errno === ERR_OK) {
+  //        this.goods = response.body.data
+  //        this.$nextTick(() => {
+  //          this._initScroll();
+  //          this._calculateHeight();
+  //        })
+  //      }
+  //    });
+      this.classMap = ['decrease', 'discount', 'guarantee', 'invoice', 'special'];
+  //    shopcart.$on('cart.add',(el) =>{
+  //      console.log(el);
+  //    })
+    },
+    components: {
+      shopcart,
+      cartControl,
+      food
+    },
+    methods: {
+      //点击左侧菜单,右侧跳至相应的模块
+      selectMenu: function (index, event) {
+        //获取右侧模块的高度数组
+        let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
+        let el = foodList[index];
+        //使右侧菜单跳转到相应的地方,在300毫秒内
+        this.foodsScroll.scrollToElement(el, 300);
+      },
+      //点击具体食物,food页面出现
+      selectFood(food, event) {
+        if (!event._constructed) {
+          return;
+        }
+        this.selectedFood = food;
         this.$nextTick(() => {
-          this._initScroll();
-          this._calculateHeight();
+          this.$refs.food.show();
         })
-      }
-    });
-//    this.$http.get('/api/goods').then((response) => {
-//      if (response.body.errno === ERR_OK) {
-//        this.goods = response.body.data
-//        this.$nextTick(() => {
-//          this._initScroll();
-//          this._calculateHeight();
-//        })
-//      }
-//    });
-    this.classMap = ['decrease', 'discount', 'guarantee', 'invoice', 'special'];
-//    shopcart.$on('cart.add',(el) =>{
-//      console.log(el);
-//    })
-  },
-  components: {
-    shopcart,
-    cartControl,
-    food
-  },
-//  events: {
-//    'cart.add'(target) {
-////      this._drop(target);
-//      console.log('123');
-//    }
-//  },
-  methods: {
-    //点击左侧菜单,右侧跳至相应的模块
-    selectMenu: function (index, $event) {
-      //获取右侧模块的高度数组
-      let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
-      let el = foodList[index];
-      //使右侧菜单跳转到相应的地方,在300毫秒内
-      this.foodsScroll.scrollToElement(el, 300);
-    },
-    //点击具体食物,food页面出现
-    selectFood(food, event) {
-      if (!event._constructed) {
-        return;
-      }
-      this.selectedFood = food;
-      this.$nextTick(() => {
-        this.$refs.food.show();
-      })
-    },
-//     监听cartControl中的_drop事件
-    cartAdd(el) {
-      // 体验优化,异步执行下落动画
-      this.$nextTick(() => {
-       this.$refs.shopcart.drop(el);
-      });
-    },
-    _initScroll() {
-      this.meunScroll = new BScroll(this.$refs.menuWrapper, {
-        //给左侧菜单创建一个click事件.
-        click: true
-      });
-      this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
-        //        目的是实时监控右侧滚动的位置
-        click: true,
-        probeType: 3
-      });
-      //监听当前的位置在y轴上的位置
-      this.foodsScroll.on('scroll', (pos) => {
-        this.scrollY = Math.abs(Math.round(pos.y));
-      })
-    },
-    //收集每个模块从最上端数的高度值
-    _calculateHeight() {
-      let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
-      let height = 0;
-      this.listHeight.push(height);
-      for (let i = 0; i < foodList.length; i++) {
-        let item = foodList[i];
-        height += item.clientHeight;
+      },
+  //     监听cartControl中的_drop事件
+      cartAdd(el) {
+        // 体验优化,异步执行下落动画
+        this.$nextTick(() => {
+         this.$refs.shopcart.drop(el);
+        });
+      },
+      _initScroll() {
+        this.meunScroll = new BScroll(this.$refs.menuWrapper, {
+          //给左侧菜单创建一个click事件.
+          click: true
+        });
+        this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
+          //        目的是实时监控右侧滚动的位置
+          click: true,
+          probeType: 3
+        });
+        //监听当前的位置在y轴上的位置
+        this.foodsScroll.on('scroll', (pos) => {
+          this.scrollY = Math.abs(Math.round(pos.y));
+        })
+      },
+      //收集每个模块从最上端数的高度值
+      _calculateHeight() {
+        let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
+        let height = 0;
         this.listHeight.push(height);
-      }
+        for (let i = 0; i < foodList.length; i++) {
+          let item = foodList[i];
+          height += item.clientHeight;
+          this.listHeight.push(height);
+        }
+      },
     },
-  },
-    //访问子组件shopcart
+      //访问子组件shopcart
     computed: {
       //比较现在所在位置和每个模块的高度值的大小
       currentIndex() {
@@ -182,7 +176,7 @@ export default {
         return foods;
       }
     },
-}
+  }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

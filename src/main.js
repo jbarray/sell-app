@@ -12,7 +12,7 @@
  import seller from './components/seller/seller.vue'
  import './common/stylus/index.styl'
  const routes=[
-   {path: '/goods', component: goods},
+   {path: '/', component: goods},
    {path: '/ratings', component: ratings},
    {path: '/seller', component: seller}
 ]

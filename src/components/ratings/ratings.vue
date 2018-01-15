@@ -56,13 +56,13 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import BScroll from 'better-scroll';
-//  import {formatDate} from '../../common/js/date';
-  import star from '../star/star';
-  import ratingselect from '../ratingselect/ratingselect';
-  import split from '../split/split';
+  import BScroll from 'better-scroll'
+//  import {formatDate} from '../../common/js/date'
+  import star from '../star/star'
+  import ratingselect from '../ratingselect/ratingselect'
+  import split from '../split/split'
 
-  const ALL = 2;
+  const ALL = 2
 //  const ERR_OK = 0;
 
   export default {
@@ -71,7 +71,7 @@
         type: Object
       }
     },
-    data() {
+    data () {
       return {
         ratings: [],
         selectType: ALL,
@@ -81,19 +81,19 @@
           positive: '推荐',
           negative: '吐槽'
         }
-      };
+      }
     },
-    created() {
+    created () {
       this.$http.get('../../../static/ratings.json').then((response) => {
-        if (response.statusText === "OK") {
-          this.ratings = response.body.ratings;
+        if (response.statusText === 'OK') {
+          this.ratings = response.body.ratings
           this.$nextTick(() => {
             this.scroll = new BScroll(this.$refs.ratings, {
               click: true
-            });
-          });
+            })
+          })
         }
-      });
+      })
     },
 //    created() {
 //      this.$http.get('api/ratings').then((response) => {

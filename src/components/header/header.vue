@@ -68,30 +68,31 @@
 <script>
   import star from '../star/star.vue'
 export default {
-  props:{
-    seller:{
-      type: Object
-    }
-  },
-  data(){
-    return {
-      isDetailShow:false
-    }
-  },
-  created(){
-    this.classMap = ['decrease','discount','guarantee','invoice','special']
-  },
-  methods:{
-    showDetail(){
-      this.isDetailShow=true
+
+    props: {
+      seller: {
+        type: Object
+      }
     },
-    hideDetail(){
-      this.isDetailShow=false
+    data() {
+      return {
+        isDetailShow:false
+      }
+    },
+    created() {
+      this.classMap = ['decrease','discount','guarantee','invoice','special']
+    },
+    methods: {
+      showDetail() {
+        this.isDetailShow=true
+      },
+      hideDetail() {
+        this.isDetailShow=false
+      }
+    },
+    components: {
+      star
     }
-  },
-  components:{
-    star
-  }
 }
 </script>
 

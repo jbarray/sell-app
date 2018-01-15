@@ -104,11 +104,14 @@
       this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
     },
     watch: {
+//      监听,当seller传入后,执行此函数
       'seller'() {
         this._initScroll();
         this._initPics();
       }
     },
+//    整个页面渲染完成后,执行此函数
+//    页面渲染一次就执行一次(解决切换商品,评论,商家路由时,页面重新渲染后滑动功能失效的问题)
     mounted() {
       this._initScroll();
       this._initPics();

@@ -3,15 +3,24 @@
   <div id="content">
     <v-header :seller="seller"></v-header>
     <div class="tab border-1px">
-    <div class="tab-item"  >
-    <router-link to="/">商品</router-link>
-    </div>
-    <div class="tab-item">
-    <router-link to="/ratings">评论</router-link>
-    </div>
-    <div class="tab-item">
-    <router-link to="/seller">商家</router-link>
-    </div>
+    <!--<div class="tab-item"  >-->
+    <!--<router-link to="/" @click.native="select(1)" :class="{'active':type===1}">商品</router-link>-->
+    <!--</div>-->
+    <!--<div class="tab-item">-->
+    <!--<router-link to="/ratings" @click.native="select(2)" :class="{'active':type===2}">评论</router-link>-->
+    <!--</div>-->
+    <!--<div class="tab-item">-->
+    <!--<router-link to="/seller" @click.native="select(3)" :class="{'active':type===3}">商家</router-link>-->
+    <!--</div>-->
+      <div class="tab-item"  >
+      <router-link to="/">商品</router-link>
+      </div>
+      <div class="tab-item">
+      <router-link to="/ratings" >评论</router-link>
+      </div>
+      <div class="tab-item">
+      <router-link to="/seller" >商家</router-link>
+      </div>
     </div>
     <router-view :seller="seller"></router-view>
   </div>
@@ -24,6 +33,7 @@
     data(){
       return{
         seller:{},
+        type:1
       }
     },
     components:{
@@ -36,6 +46,11 @@
         }
       });
     },
+    methods: {
+      select(e) {
+        this.type=e;
+      }
+    }
 //    created(){
 //      this.$http.get('/api/seller').then((response) => {
 //        if(response.body.errno===ERR_OK){
@@ -61,6 +76,6 @@
        display:block
        font-size: 14px
        color:rgb(77,85,93)
-       &:hover
+       &.router-link-exact-active
          color:rgb(240,20,20)
 </style>

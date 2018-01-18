@@ -63,7 +63,6 @@
   export default {
     data() {
       return {
-        goods: [],
         //设计五个小球,以供使用
         balls: [
           {
@@ -171,6 +170,9 @@
         this.selectFoods.forEach((food) => {
           food.count = 0;
         });
+        let now = new Date();
+        now.setDate(now.getDate()-7);
+        document.cookie = 'carList=xx;expires=' + now;
       },
       //     监听cartControl中的_drop事件
       cartAdd(el) {

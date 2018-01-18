@@ -1,3 +1,4 @@
+<script src="../../../../shopping-cart/js_6/main.js"></script>
 <template>
   <div class="goods">
     <!--左侧列表-->
@@ -50,10 +51,12 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import Vue from 'vue'
   import BScroll from 'better-scroll'
   import shopcart from '../shopcart/shopcart'
   import cartControl from '../cart_control/cart_control'
   import food from '../food/food'
+  import {loadData} from '../../common/js/store'
 //  const ERR_OK = 0;
 export default {
     data() {
@@ -73,6 +76,7 @@ export default {
       this.$http.get('../../../static/goods.json').then((response) => {
         if (response.statusText === "OK") {
           this.goods = response.body.goods
+          this._changeCount();
           this.$nextTick(() => {
             this._initScroll();
             this._calculateHeight();
@@ -89,9 +93,6 @@ export default {
   //      }
   //    });
       this.classMap = ['decrease', 'discount', 'guarantee', 'invoice', 'special'];
-  //    shopcart.$on('cart.add',(el) =>{
-  //      console.log(el);
-  //    })
     },
     components: {
       shopcart,
@@ -150,6 +151,30 @@ export default {
           this.listHeight.push(height);
         }
       },
+      //        给每个food设置id
+//      更新cookie缓存数据到goods列表中
+      _changeCount() {
+        let list = [];
+        let List=loadData(list);
+        this.goods.forEach((good,index) => {
+          let d=index;
+          good.foods.forEach((food,index) => {
+            let f=index;
+//            给每一个food设置id,防止热销榜和正常单内的同种食物冲突
+            if(typeof food.id==='undefined') {
+              //给json文件中的item添加一个属性.属性值为true
+              Vue.set(food, "id", d+'-'+f);
+            }
+            for(let i=0;i<List.length;i++){
+             if (food.id===List[i].id) {
+               if(!food.count){
+                 Vue.set(food, 'count', List[i].count)
+               }
+              }
+            }
+          });
+        });
+      }
     },
       //访问子组件shopcart
     computed: {
@@ -166,13 +191,37 @@ export default {
       },
       selectFoods() {
         let foods = [];
-        this.goods.forEach((good) => {
-          good.foods.forEach((food) => {
+        let de =[];
+        this.goods.forEach((good,index) => {
+//          let d=index;
+          good.foods.forEach((food,index) => {
+//            let f=index;
             if (food.count) {
               foods.push(food);
             }
           });
         });
+//        for(let i=0;i<foods.length;i++){
+//          let a=foods[i];
+//          for(let j=i+1;j<foods.length;j++){
+//            let b=foods[j];
+//            if(a.name===b.name){
+////             console.log(j);
+//             de.push(b);
+//  //            foods.splice(foods[i],1);
+//  //            console.log("重复:"+foods);
+//            }
+//          }
+//        }
+//        console.log(de);
+////        移除在foods中的de
+//        for(let k=0;k<foods.length;k++){
+//          for(let l=0;l<de.length;l++){
+//            if(foods[k]===de[l]){
+//              foods.splice(foods[k],de.length);
+//            }
+//          }
+//        }
         return foods;
       }
     },

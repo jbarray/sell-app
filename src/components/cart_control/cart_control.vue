@@ -9,6 +9,8 @@
 </template>
 <script type="text/ecmascript-6">
   import Vue from 'vue'
+  import {severData} from '../../common/js/store';
+  import {deleteData} from '../../common/js/store';
   export default {
     props: {
       food: {
@@ -22,6 +24,7 @@
           return;
         }
         if (this.food.count > 0) {
+          deleteData(this.food);
           this.food.count--;
         }
       },
@@ -40,6 +43,8 @@
         //        触发小球事件的启动
         this.$emit('cart-add', event.target);
         //      this.$dispatch('cart.add', event.target);
+//        console.log(this.foods)
+        severData(this.food);
       }
     }
   }

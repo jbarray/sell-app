@@ -2,20 +2,31 @@
 
 > sell app by vue
 
-## Build Setup
+## 项目介绍
 
-``` bash
-# install dependencies
-npm install
+仿饿了么点餐系统<br/>
+实现点餐及查看评级,商家资质等功能,技术使用的是当今最热:vue框架.
 
-# serve with hot reload at localhost:8080
-npm run dev
 
-# build for production with minification
-npm run build
+## 使用技术
 
-# build for production and view the bundle analyzer report
-npm run build --report
-```
+HTML + CSS3 + Vue + vue-router + vue-cli
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## 使用工具
+
+webpack + npm + stylus
+
+
+## 解决问题
+1.利用vue-router单页面跳转功能,将结构划分成3个部分:点餐,评价,商家<br/>
+2.添加某个菜品,会有小球飞入购物车的动画.<br/>
+3.选择食物种类,出现该类中的餐品.<br/>
+4.用户标记数据存储到cookie中.<br/>
+5.webpack负责转换编译,打包<br/>
+
+## 实现功能
+3个部分分别实现不同功能:<br/>
+  点餐:点餐时,有小球飞入,购物车数据同时更新.点击某个餐品,进入此餐品的介绍页<br/>
+  评价:可选择评价种类,查看不同种评价<br/>
+  商家:商家的信息及用户评分的展示<br/>
+ 
